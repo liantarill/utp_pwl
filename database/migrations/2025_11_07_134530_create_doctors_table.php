@@ -16,7 +16,7 @@ return new class extends Migration
             $table->foreignUuid('user_id')->constrained()->onDelete('cascade');
             $table->foreignId('specialization_id')->constrained()->onDelete('restrict');
             $table->string('license_number')->unique();
-            $table->string('str_number')->unique(); // Surat Tanda Registrasi
+            $table->string('str_number')->unique(); // Surat Tanda Registrasi.
             $table->date('str_expiry_date');
             $table->text('education')->nullable();
             $table->integer('experience_years')->default(0);
