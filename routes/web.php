@@ -1,6 +1,9 @@
 <?php
 
-use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
+use App\Http\Controllers\Doctor\DashboardController as DoctorDashboardController;
+use App\Http\Controllers\Staff\DashboardController as StaffDashboardController;
+
 use App\Http\Controllers\Auth\LoginController;
 use Illuminate\Support\Facades\Route;
 
@@ -33,14 +36,14 @@ Route::prefix('auth')->name('auth.')->group(function () {
 
 
 Route::prefix('admin')->name('admin.')->middleware('role:admin')->group(function () {
-    Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    Route::get('dashboard', [AdminDashboardController::class, 'index'])->name('dashboard');
 });
 
 
-// Route::prefix('doctor')->name('doctor.')->middleware('role:doctor')->group(function () {
-//     Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
-// });
+Route::prefix('doctor')->name('doctor.')->middleware('role:doctor')->group(function () {
+    Route::get('dashboard', [DoctorDashboardController::class, 'index'])->name('dashboard');
+});
 
-// Route::prefix('staff')->name('staff.')->middleware('role:staff')->group(function () {
-//     Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
-// });
+Route::prefix('staff')->name('staff.')->middleware('role:staff')->group(function () {
+    Route::get('dashboard', [StaffDashboardController::class, 'index'])->name('dashboard');
+});
