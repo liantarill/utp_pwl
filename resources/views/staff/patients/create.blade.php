@@ -1,55 +1,61 @@
-@extends('layouts.app')
+{{-- resources/views/items/create.blade.php --}}
+@extends('app')
+
+@section('title', 'Tambah Item Baru')
 
 @section('content')
-    <div class="container">
-        <h1>{{ isset($patient) ? 'Edit Patient' : 'Add Patient' }}</h1>
+<div class="min-h-screen p-6" style="background: linear-gradient(180deg, #f0f5fa 0%, #ffffff 100%);">
+    <div class="max-w-2xl mx-auto">
+        <div class="bg-white shadow rounded-lg p-6">
+            <h2 class="text-lg font-semibold mb-4" style="color:#1e3a5f">Tambah Item Baru</h2>
 
-        <form method="POST"
-            action="{{ isset($patient) ? route('staff.patients.update', $patient) : route('staff.patients.store') }}">
-            @csrf
-            @if (isset($patient))
-                @method('PUT')
+            {{-- Pesan Error --}}
+            @if($errors->any())
+            <div class="mb-4 p-3 rounded" style="background:#fee2e2; color:#991b1b">
+                <ul class="list-disc pl-5">
+                    @foreach($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
             @endif
 
-            <div class="mb-3">
-                <label>Name</label>
-                <input type="text" name="name" class="form-control" value="{{ old('name', $patient->name ?? '') }}"
-                    required>
-            </div>
-            <div class="mb-3">
-                <label>Identity Number (NIK)</label>
-                <input type="text" name="identity_number" class="form-control"
-                    value="{{ old('identity_number', $patient->identity_number ?? '') }}" required>
-            </div>
-            <div class="mb-3">
-                <label>Date of Birth</label>
-                <input type="date" name="date_of_birth" class="form-control"
-                    value="{{ old('date_of_birth', $patient->date_of_birth ?? '') }}" required>
-            </div>
-            <div class="mb-3">
-                <label>Gender</label>
-                <select name="gender" class="form-control" required>
-                    <option value="male" {{ isset($patient) && $patient->gender == 'male' ? 'selected' : '' }}>Male
-                    </option>
-                    <option value="female" {{ isset($patient) && $patient->gender == 'female' ? 'selected' : '' }}>Female
-                    </option>
-                </select>
-            </div>
-            <div class="mb-3">
-                <label>Phone</label>
-                <input type="text" name="phone" class="form-control" value="{{ old('phone', $patient->phone ?? '') }}"
-                    required>
-            </div>
-            <div class="mb-3">
-                <label>Email</label>
-                <input type="email" name="email" class="form-control" value="{{ old('email', $patient->email ?? '') }}">
-            </div>
-            <div class="mb-3">
-                <label>Address</label>
-                <textarea name="address" class="form-control" required>{{ old('address', $patient->address ?? '') }}</textarea>
-            </div>
+            {{-- Form Tambah Item --}}
+            <form action="{{ route('items.store') }}" method="POST">
+                @csrf
+                <div class="grid grid-cols-1 gap-4">
+                    {{-- Input Nama --}}
+                    <div>
+                        <label class="block text-sm font-medium mb-1" style="color:#1e3a5f">Nama</label>
+                        <input type="text" 
+                               name="name" 
+                               value="{{ old('name') }}" 
+                               class="w-full border rounded px-3 py-2 focus:outline-none focus:ring focus:ring-[#2d5a8c]/40"
+                               placeholder="Masukkan nama item">
+                    </div>
 
-            <button class="btn btn-primary">{{ isset($patient) ? 'Update' : 'Save' }}</button>
-        </form>
+                    {{-- Input Deskripsi --}}
+                    <div>
+                        <label class="block text-sm font-medium mb-1" style="color:#1e3a5f">Deskripsi</label>
+                        <textarea name="description" 
+                                  rows="4" 
+                                  class="w-full border rounded px-3 py-2 focus:outline-none focus:ring focus:ring-[#2d5a8c]/40"
+                                  placeholder="Tulis deskripsi singkat">{{ old('description') }}</textarea>
+                    </div>
+
+                    {{-- Tombol Aksi --}}
+                    <div class="flex items-center justify-end">
+                        <a href="{{ route('items.index') }}" 
+                           class="mr-2 px-4 py-2 rounded-md" 
+                           style="border:1px solid #2d5a8c; color:#2d5a8c">Batal</a>
+
+                        <button type="submit" 
+                                class="px-4 py-2 rounded-md font-medium" 
+                                style="background:#2d5a8c; color:#fff">Simpan</button>
+                    </div>
+                </div>
+            </form>
+        </div>
     </div>
+</div>
 @endsection
