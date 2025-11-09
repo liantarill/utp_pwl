@@ -46,4 +46,8 @@ Route::prefix('doctor')->name('doctor.')->middleware('role:doctor')->group(funct
 
 Route::prefix('staff')->name('staff.')->middleware('role:staff')->group(function () {
     Route::get('dashboard', [StaffDashboardController::class, 'index'])->name('dashboard');
+
+    Route::resource('patients', \App\Http\Controllers\Staff\PatientController::class);
+    Route::resource('appointments', \App\Http\Controllers\Staff\AppointmentController::class);
+    Route::post('appointments/{appointment}/checkin', [\App\Http\Controllers\Staff\AppointmentController::class, 'checkin'])->name('appointments.checkin');
 });
