@@ -1,75 +1,76 @@
 @extends('layouts.app')
 
-@section('content')
-    <div class="container">
-        <h1>New Appointment</h1>
+@section('title', 'Tambah Janji Temu')
 
-        <form action="{{ route('staff.appointments.store') }}" method="POST">
+@section('content')
+<div class="min-h-screen bg-blue-pale py-10 px-6">
+    <div class="max-w-3xl mx-auto bg-white p-8 rounded-2xl shadow-lg">
+        <h2 class="text-2xl font-bold mb-6 text-blue-dark">Tambah Janji Temu Baru</h2>
+
+        @if($errors->any())
+            <div class="mb-4 p-3 rounded bg-red-100 text-red-700">
+                <ul class="list-disc pl-5">
+                    @foreach($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
+
+        <form action="{{ route('staff.appointments.store') }}" method="POST" class="space-y-5">
             @csrf
 
-            <div class="mb-3">
-                <label>Patient</label>
-                <select name="patient_id" class="form-control" required>
-                    <option value="">-- Select Patient --</option>
-                    @foreach ($patients as $patient)
-                        <option value="{{ $patient->id }}">{{ $patient->name }} ({{ $patient->medical_record_number }})
-                        </option>
+            <div>
+                <label class="block text-gray-700 font-medium mb-2">Pasien</label>
+                <select name="patient_id" class="w-full border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-main" required>
+                    <option value="">-- Pilih Pasien --</option>
+                    @foreach($patients as $patient)
+                        <option value="{{ $patient->id }}">{{ $patient->name }}</option>
                     @endforeach
                 </select>
             </div>
 
-            <div class="mb-3">
-                <label>Doctor</label>
-                <select name="doctor_id" class="form-control" id="doctorSelect" required>
-                    <option value="">-- Select Doctor --</option>
-                    @foreach ($doctors as $doctor)
-                        <option value="{{ $doctor->id }}">{{ $doctor->user->name }}</option>
+            <div>
+                <label class="block text-gray-700 font-medium mb-2">Dokter</label>
+                <select name="doctor_id" class="w-full border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-main" required>
+                    <option value="">-- Pilih Dokter --</option>
+                    @foreach($doctors as $doctor)
+                        <option value="{{ $doctor->id }}">{{ $doctor->name }}</option>
                     @endforeach
                 </select>
             </div>
 
-            <div class="mb-3">
-                <label>Schedule</label>
-                <select name="schedule_id" class="form-control" id="scheduleSelect" required>
-                    <option value="">-- Select Schedule --</option>
-                    <!-- Options will be filled by JS based on selected doctor -->
-                </select>
+            <div>
+                <label class="block text-gray-700 font-medium mb-2">Tanggal Janji</label>
+                <input type="date" name="appointment_date" class="w-full border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-main" required>
             </div>
 
-            <div class="mb-3">
-                <label>Date</label>
-                <input type="date" name="appointment_date" class="form-control" required>
+            <div>
+                <label class="block text-gray-700 font-medium mb-2">Waktu Janji</label>
+                <input type="time" name="appointment_time" class="w-full border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-main" required>
             </div>
 
-            <div class="mb-3">
-                <label>Complaint</label>
-                <textarea name="complaint" class="form-control"></textarea>
+            <div>
+                <label class="block text-gray-700 font-medium mb-2">Keluhan</label>
+                <textarea name="complaint" rows="3" class="w-full border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-main"
+                          placeholder="Masukkan keluhan pasien (opsional)"></textarea>
             </div>
 
-            <button type="submit" class="btn btn-primary">Save Appointment</button>
-            <a href="{{ route('staff.appointments.index') }}" class="btn btn-secondary">Back</a>
+            <div>
+                <label class="block text-gray-700 font-medium mb-2">Catatan</label>
+                <textarea name="notes" rows="3" class="w-full border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-main"
+                          placeholder="Masukkan catatan tambahan (opsional)"></textarea>
+            </div>
+
+            <div class="flex justify-end gap-3 pt-4">
+                <a href="{{ route('staff.appointments.index') }}"
+                   class="px-5 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition">Batal</a>
+                <button type="submit"
+                        class="px-5 py-2 bg-blue-main text-white rounded-lg hover:bg-blue-dark transition">
+                    Simpan Janji Temu
+                </button>
+            </div>
         </form>
     </div>
-
-    <script>
-        const doctors = @json($doctors);
-
-        document.getElementById('doctorSelect').addEventListener('change', function() {
-            const doctorId = this.value;
-            const scheduleSelect = document.getElementById('scheduleSelect');
-            scheduleSelect.innerHTML = '<option value="">-- Select Schedule --</option>';
-
-            if (!doctorId) return;
-
-            const doctor = doctors.find(d => d.id == doctorId);
-            if (doctor && doctor.schedules.length) {
-                doctor.schedules.forEach(s => {
-                    const option = document.createElement('option');
-                    option.value = s.id;
-                    option.text = `${s.day_of_week} (${s.start_time} - ${s.end_time})`;
-                    scheduleSelect.appendChild(option);
-                });
-            }
-        });
-    </script>
+</div>
 @endsection

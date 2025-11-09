@@ -12,13 +12,16 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('schedules', function (Blueprint $table) {
-            $table->id();
-            $table->foreignUuid('doctor_id')->constrained()->onDelete('cascade');
-            $table->enum('day_of_week', ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday']);
+            $table->uuid('id')->primary();
+
+            // Hubungkan ke doctors (juga UUID)
+            $table->foreignUuid('doctor_id')->constrained('doctors')->onDelete('cascade');
+
+            $table->string('day'); // contoh: Monday, Tuesday, dst
             $table->time('start_time');
             $table->time('end_time');
-            $table->integer('quota')->default(10); // jumlah pasien per sesi
             $table->boolean('is_active')->default(true);
+
             $table->timestamps();
             $table->softDeletes();
         });

@@ -1,44 +1,80 @@
 @extends('layouts.app')
 
-@section('content')
-    <div class="container">
-        <h1>Patients</h1>
-        <a href="{{ route('staff.patients.create') }}" class="btn btn-success mb-2">Add Patient</a>
+@section('title', 'Data Pasien')
 
+@section('content')
+<div class="min-h-screen bg-blue-pale py-10 px-6">
+    <div class="max-w-6xl mx-auto">
+        <!-- Header -->
+        <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-8">
+            <div>
+                <h1 class="text-3xl font-bold text-blue-dark">Data Pasien</h1>
+                <p class="text-gray-500 text-sm mt-1">Kelola data pasien rumah sakit dengan mudah dan cepat</p>
+            </div>
+
+            <a href="{{ route('staff.patients.create') }}"
+               class="mt-3 md:mt-0 inline-flex items-center px-4 py-2 bg-blue-main text-white rounded-lg shadow hover:bg-blue-dark transition">
+                <i class="fas fa-plus mr-2"></i> Tambah Pasien
+            </a>
+        </div>
+
+        <!-- Pesan Sukses -->
         @if (session('success'))
-            <div class="alert alert-success">{{ session('success') }}</div>
+            <div class="mb-5 p-4 bg-green-50 border-l-4 border-green-500 text-green-800 rounded">
+                {{ session('success') }}
+            </div>
         @endif
 
-        <table class="table table-bordered">
-            <thead>
-                <tr>
-                    <th>MRN</th>
-                    <th>Name</th>
-                    <th>Phone</th>
-                    <th>Email</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach ($patients as $patient)
+        <!-- Tabel -->
+        <div class="bg-white shadow-lg rounded-2xl overflow-hidden border border-gray-100">
+            <table class="min-w-full table-auto">
+                <thead class="bg-blue-dark text-white">
                     <tr>
-                        <td>{{ $patient->medical_record_number }}</td>
-                        <td>{{ $patient->name }}</td>
-                        <td>{{ $patient->phone }}</td>
-                        <td>{{ $patient->email }}</td>
-                        <td>
-                            <a href="{{ route('staff.patients.show', $patient) }}" class="btn btn-info btn-sm">View</a>
-                            <a href="{{ route('staff.patients.edit', $patient) }}" class="btn btn-warning btn-sm">Edit</a>
-                            <form action="{{ route('staff.patients.destroy', $patient) }}" method="POST"
-                                style="display:inline-block">
-                                @csrf @method('DELETE')
-                                <button class="btn btn-danger btn-sm"
-                                    onclick="return confirm('Delete patient?')">Delete</button>
-                            </form>
-                        </td>
+                        <th class="px-6 py-3 text-left text-sm font-semibold">No</th>
+                        <th class="px-6 py-3 text-left text-sm font-semibold">Nama</th>
+                        <th class="px-6 py-3 text-left text-sm font-semibold">NIK</th>
+                        <th class="px-6 py-3 text-left text-sm font-semibold">Tanggal Lahir</th>
+                        <th class="px-6 py-3 text-left text-sm font-semibold">Jenis Kelamin</th>
+                        <th class="px-6 py-3 text-left text-sm font-semibold">Telepon</th>
+                        <th class="px-6 py-3 text-center text-sm font-semibold">Aksi</th>
                     </tr>
-                @endforeach
-            </tbody>
-        </table>
+                </thead>
+                <tbody>
+                    @forelse ($patients as $index => $patient)
+                        <tr class="border-b hover:bg-blue-pale transition">
+                            <td class="px-6 py-3 text-sm text-gray-700">{{ $index + 1 }}</td>
+                            <td class="px-6 py-3 text-sm font-medium text-gray-800">{{ $patient->name }}</td>
+                            <td class="px-6 py-3 text-sm text-gray-700">{{ $patient->identity_number }}</td>
+                            <td class="px-6 py-3 text-sm text-gray-700">{{ \Carbon\Carbon::parse($patient->date_of_birth)->format('d M Y') }}</td>
+                            <td class="px-6 py-3 text-sm text-gray-700 capitalize">{{ $patient->gender }}</td>
+                            <td class="px-6 py-3 text-sm text-gray-700">{{ $patient->phone }}</td>
+                            <td class="px-6 py-3 text-center flex justify-center gap-2">
+                                <!-- Tombol Edit -->
+                                <a href="{{ route('staff.patients.edit', $patient->id) }}"
+                                   class="inline-flex items-center px-3 py-1.5 bg-yellow-400 text-white text-sm rounded-lg hover:bg-yellow-500 transition">
+                                    <i class="fas fa-edit mr-2"></i> Edit
+                                </a>
+
+                                <!-- Tombol Hapus -->
+                                <form action="{{ route('staff.patients.destroy', $patient->id) }}" method="POST"
+                                      onsubmit="return confirm('Yakin ingin menghapus data pasien ini?')" class="inline">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit"
+                                        class="inline-flex items-center px-3 py-1.5 bg-red-500 text-white text-sm rounded-lg hover:bg-red-600 transition">
+                                        <i class="fas fa-trash-alt mr-2"></i> Hapus
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                    @empty
+                        <tr>
+                            <td colspan="7" class="text-center py-6 text-gray-500">Belum ada data pasien.</td>
+                        </tr>
+                    @endforelse
+                </tbody>
+            </table>
+        </div>
     </div>
+</div>
 @endsection
