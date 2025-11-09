@@ -37,6 +37,9 @@ class ScheduleController extends Controller
             'quota' => $request->quota,
         ]);
 
+
+
+
         return redirect()->route('doctor.schedules.index')->with('success', 'Schedule created');
     }
 
