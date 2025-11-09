@@ -1,59 +1,80 @@
-{{-- resources/views/items/index.blade.php --}}
-@extends('app')
+@extends('layouts.app')
 
-@section('title', 'Daftar Item')
+@section('title', 'Data Janji Temu')
 
 @section('content')
-<div class="min-h-screen p-6" style="background: linear-gradient(180deg, #f0f5fa 0%, #ffffff 100%);">
-    <div class="max-w-6xl mx-auto">
-        <div class="flex items-center justify-between mb-6">
-            <h1 class="text-2xl font-semibold" style="color: #1e3a5f">Daftar Item</h1>
-            <a href="{{ route('items.create') }}" 
-               class="inline-block px-4 py-2 rounded-lg font-medium" 
-               style="background:#2d5a8c; color:#fff">Tambah Item</a>
+<div class="min-h-screen bg-blue-pale py-10 px-6">
+    <div class="max-w-7xl mx-auto">
+        <!-- Header -->
+        <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-8">
+            <div>
+                <h1 class="text-3xl font-bold text-blue-dark">Data Janji Temu</h1>
+                <p class="text-gray-500 text-sm mt-1">Kelola jadwal janji temu pasien dengan dokter</p>
+            </div>
+
+            <a href="{{ route('staff.appointments.create') }}"
+               class="mt-3 md:mt-0 inline-flex items-center px-4 py-2 bg-blue-main text-white rounded-lg shadow hover:bg-blue-dark transition">
+                <i class="fas fa-plus mr-2"></i> Tambah Janji Temu
+            </a>
         </div>
 
-        <div class="bg-white shadow-md rounded-lg overflow-hidden">
-            <table class="min-w-full divide-y divide-gray-200">
-                <thead class="bg-[#6b94b8]/10">
+        <!-- Pesan sukses -->
+        @if (session('success'))
+            <div class="mb-5 p-4 bg-green-50 border-l-4 border-green-500 text-green-800 rounded">
+                {{ session('success') }}
+            </div>
+        @endif
+
+        <!-- Tabel -->
+        <div class="bg-white shadow-lg rounded-2xl overflow-hidden border border-gray-100">
+            <table class="min-w-full table-auto">
+                <thead class="bg-blue-dark text-white">
                     <tr>
-                        <th class="px-6 py-3 text-left text-sm font-medium text-[#1e3a5f]">#</th>
-                        <th class="px-6 py-3 text-left text-sm font-medium text-[#1e3a5f]">Nama</th>
-                        <th class="px-6 py-3 text-left text-sm font-medium text-[#1e3a5f]">Deskripsi</th>
-                        <th class="px-6 py-3 text-right text-sm font-medium text-[#1e3a5f]">Aksi</th>
+                        <th class="px-6 py-3 text-left text-sm font-semibold">No</th>
+                        <th class="px-6 py-3 text-left text-sm font-semibold">Nomor Janji</th>
+                        <th class="px-6 py-3 text-left text-sm font-semibold">Pasien</th>
+                        <th class="px-6 py-3 text-left text-sm font-semibold">Dokter</th>
+                        <th class="px-6 py-3 text-left text-sm font-semibold">Tanggal</th>
+                        <th class="px-6 py-3 text-left text-sm font-semibold">Status</th>
+                        <th class="px-6 py-3 text-center text-sm font-semibold">Aksi</th>
                     </tr>
                 </thead>
-                <tbody class="bg-white divide-y divide-gray-100">
-                    @forelse($items as $item)
-                    <tr>
-                        <td class="px-6 py-4 text-sm text-gray-700">{{ $loop->iteration }}</td>
-                        <td class="px-6 py-4 text-sm text-gray-800">{{ $item->name }}</td>
-                        <td class="px-6 py-4 text-sm text-gray-600">{{ Str::limit($item->description, 60) }}</td>
-                        <td class="px-6 py-4 text-sm text-right">
-                            <a href="{{ route('items.show', $item) }}" 
-                               class="inline-block mr-2 px-3 py-1 rounded-md text-sm" 
-                               style="border:1px solid #2d5a8c; color:#2d5a8c">Lihat</a>
-                            <a href="{{ route('items.edit', $item) }}" 
-                               class="inline-block px-3 py-1 rounded-md text-sm" 
-                               style="background:#4a7ba7; color:#fff">Edit</a>
-                        </td>
-                    </tr>
+                <tbody>
+                    @forelse ($appointments as $index => $appointment)
+                        <tr class="border-b hover:bg-blue-pale transition">
+                            <td class="px-6 py-3 text-sm text-gray-700">{{ $index + 1 }}</td>
+                            <td class="px-6 py-3 text-sm font-medium text-gray-800">{{ $appointment->appointment_number }}</td>
+                            <td class="px-6 py-3 text-sm text-gray-700">{{ $appointment->patient->name ?? '-' }}</td>
+                            <td class="px-6 py-3 text-sm text-gray-700">{{ $appointment->doctor->name ?? '-' }}</td>
+                            <td class="px-6 py-3 text-sm text-gray-700">{{ $appointment->appointment_date->format('d M Y') }}</td>
+                            <td class="px-6 py-3 text-sm text-gray-700 capitalize">{{ $appointment->status ?? '-' }}</td>
+                            <td class="px-6 py-3 text-center flex justify-center gap-2">
+                                <a href="{{ route('staff.appointments.show', $appointment->id) }}"
+                                   class="inline-flex items-center px-3 py-1.5 bg-blue-light text-white text-sm rounded-lg hover:bg-blue-main transition">
+                                    <i class="fas fa-eye mr-2"></i> Detail
+                                </a>
+                                <a href="{{ route('staff.appointments.edit', $appointment->id) }}"
+                                   class="inline-flex items-center px-3 py-1.5 bg-yellow-400 text-white text-sm rounded-lg hover:bg-yellow-500 transition">
+                                    <i class="fas fa-edit mr-2"></i> Edit
+                                </a>
+                                <form action="{{ route('staff.appointments.destroy', $appointment->id) }}" method="POST"
+                                      onsubmit="return confirm('Yakin ingin menghapus janji temu ini?')" class="inline">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit"
+                                        class="inline-flex items-center px-3 py-1.5 bg-red-500 text-white text-sm rounded-lg hover:bg-red-600 transition">
+                                        <i class="fas fa-trash-alt mr-2"></i> Hapus
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
                     @empty
-                    <tr>
-                        <td colspan="4" class="px-6 py-8 text-center text-gray-500">
-                            Belum ada item. 
-                            <a href="{{ route('items.create') }}" class="underline" style="color:#2d5a8c">
-                                Buat sekarang
-                            </a>.
-                        </td>
-                    </tr>
+                        <tr>
+                            <td colspan="7" class="text-center py-6 text-gray-500">Belum ada data janji temu.</td>
+                        </tr>
                     @endforelse
                 </tbody>
             </table>
-        </div>
-
-        <div class="mt-4">
-            {{ $items->links() }}
         </div>
     </div>
 </div>

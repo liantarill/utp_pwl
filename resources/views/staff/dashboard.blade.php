@@ -1,70 +1,130 @@
 @extends('layouts.app')
 
-@section('title', 'Dashboard Staff')
+@section('title', 'Dashboard Admin')
 
 @section('content')
-<div class="min-h-screen bg-blue-pale py-10 px-6">
-    <div class="max-w-6xl mx-auto">
-        <!-- Header -->
-        <div class="flex items-center justify-between mb-10">
-            <div>
-                <h1 class="text-3xl font-bold text-blue-dark tracking-tight">Dashboard Staff</h1>
-                <p class="text-gray-600 mt-1">Selamat datang kembali, <span class="font-semibold text-blue-main">{{ auth()->user()->name }}</span> 👋</p>
+<div class="container-fluid py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="fw-bold text-dark">Dashboard Admin</h2>
+        <span class="text-muted">Selamat datang kembali, <strong>{{ Auth::user()->name }}</strong></span>
+    </div>
+
+    {{-- Statistik Cards --}}
+    <div class="row g-4">
+        <div class="col-md-4">
+            <div class="card shadow border-0 rounded-4 bg-white hover-shadow transition">
+                <div class="card-body d-flex justify-content-between align-items-center">
+                    <div>
+                        <h5 class="text-secondary fw-semibold mb-1">Total Dokter</h5>
+                        <h3 class="fw-bold text-dark mb-0">{{ $totalDoctors ?? 0 }}</h3>
+                    </div>
+                    <div class="bg-dark text-white rounded-circle p-3">
+                        <i class="fas fa-user-md fa-lg"></i>
+                    </div>
+                </div>
             </div>
-            <form id="logout-form" action="{{ route('auth.logout') }}" method="POST">
-                @csrf
-                <button type="submit" class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-xl shadow-md transition">
-                    <i class="fas fa-sign-out-alt mr-2"></i> Logout
-                </button>
-            </form>
         </div>
 
-        <!-- Dashboard Cards -->
-        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            <!-- Manage Patients -->
-            <a href="{{ route('staff.patients.index') }}"
-                class="group bg-white p-8 rounded-2xl shadow-xl hover:shadow-2xl transition transform hover:-translate-y-1 border border-gray-100">
-                <div class="flex items-center mb-5">
-                    <div class="bg-blue-main/10 p-3 rounded-full mr-4">
-                        <i class="fas fa-user-injured text-blue-main text-2xl"></i>
-                    </div>
-                    <h3 class="text-xl font-semibold text-blue-dark group-hover:text-blue-main transition">Data Pasien</h3>
-                </div>
-                <p class="text-gray-600 mb-5">Kelola data pasien, tambahkan, ubah, dan lihat riwayat pasien dengan mudah.</p>
-                <span class="text-blue-main font-medium group-hover:underline">Kelola Sekarang →</span>
-            </a>
-
-            <!-- Manage Appointments -->
-            <a href="{{ route('staff.appointments.index') }}"
-                class="group bg-white p-8 rounded-2xl shadow-xl hover:shadow-2xl transition transform hover:-translate-y-1 border border-gray-100">
-                <div class="flex items-center mb-5">
-                    <div class="bg-blue-main/10 p-3 rounded-full mr-4">
-                        <i class="fas fa-calendar-check text-blue-main text-2xl"></i>
-                    </div>
-                    <h3 class="text-xl font-semibold text-blue-dark group-hover:text-blue-main transition">Janji Temu</h3>
-                </div>
-                <p class="text-gray-600 mb-5">Atur jadwal janji temu pasien dan pantau status konsultasi dengan cepat.</p>
-                <span class="text-blue-main font-medium group-hover:underline">Lihat Jadwal →</span>
-            </a>
-
-            <!-- Optional: Statistics / Summary -->
-            <div class="bg-gradient-to-br from-blue-main to-blue-dark text-white p-8 rounded-2xl shadow-2xl flex flex-col justify-between">
-                <div>
-                    <h3 class="text-xl font-semibold mb-3">Statistik Singkat</h3>
-                    <p class="text-blue-100 text-sm">Jumlah pasien dan janji temu bulan ini.</p>
-                </div>
-                <div class="flex items-center justify-between mt-6">
+        <div class="col-md-4">
+            <div class="card shadow border-0 rounded-4 bg-white hover-shadow transition">
+                <div class="card-body d-flex justify-content-between align-items-center">
                     <div>
-                        <p class="text-3xl font-bold">{{ $patientsCount ?? '—' }}</p>
-                        <p class="text-blue-200 text-sm">Pasien</p>
+                        <h5 class="text-secondary fw-semibold mb-1">Total Pasien</h5>
+                        <h3 class="fw-bold text-dark mb-0">{{ $totalPatients ?? 0 }}</h3>
                     </div>
+                    <div class="bg-dark text-white rounded-circle p-3">
+                        <i class="fas fa-users fa-lg"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card shadow border-0 rounded-4 bg-white hover-shadow transition">
+                <div class="card-body d-flex justify-content-between align-items-center">
                     <div>
-                        <p class="text-3xl font-bold">{{ $appointmentsCount ?? '—' }}</p>
-                        <p class="text-blue-200 text-sm">Janji Temu</p>
+                        <h5 class="text-secondary fw-semibold mb-1">Total Appointment</h5>
+                        <h3 class="fw-bold text-dark mb-0">{{ $totalAppointments ?? 0 }}</h3>
+                    </div>
+                    <div class="bg-dark text-white rounded-circle p-3">
+                        <i class="fas fa-calendar-check fa-lg"></i>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+
+    {{-- Grafik Statistik --}}
+    <div class="row mt-5">
+        <div class="col-lg-8">
+            <div class="card shadow border-0 rounded-4 bg-white">
+                <div class="card-header bg-white border-0">
+                    <h5 class="fw-bold text-dark mb-0">Grafik Appointment per Bulan</h5>
+                </div>
+                <div class="card-body">
+                    <canvas id="appointmentsChart" height="120"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4">
+            <div class="card shadow border-0 rounded-4 bg-white h-100">
+                <div class="card-header bg-white border-0">
+                    <h5 class="fw-bold text-dark mb-0">Aktivitas Terbaru</h5>
+                </div>
+                <div class="card-body">
+                    <ul class="list-group list-group-flush">
+                        @forelse($recentAppointments ?? [] as $item)
+                            <li class="list-group-item bg-transparent border-0 px-0 py-2">
+                                <div class="d-flex justify-content-between">
+                                    <div>
+                                        <strong>{{ $item->patient->name ?? 'Pasien' }}</strong><br>
+                                        <small class="text-muted">{{ $item->doctor->user->name ?? 'Dokter' }}</small>
+                                    </div>
+                                    <span class="badge bg-dark text-white">{{ ucfirst($item->status) }}</span>
+                                </div>
+                            </li>
+                        @empty
+                            <li class="list-group-item bg-transparent border-0 text-muted">Belum ada aktivitas.</li>
+                        @endforelse
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
+
+{{-- Chart.js --}}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    const ctx = document.getElementById('appointmentsChart').getContext('2d');
+    const appointmentsChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: {!! json_encode($chartLabels ?? ['Jan','Feb','Mar','Apr','May','Jun']) !!},
+            datasets: [{
+                label: 'Jumlah Appointment',
+                data: {!! json_encode($chartData ?? [5, 7, 3, 10, 8, 6]) !!},
+                borderColor: '#000',
+                backgroundColor: 'rgba(0,0,0,0.05)',
+                tension: 0.3,
+                fill: true
+            }]
+        },
+        options: {
+            plugins: {
+                legend: { display: false }
+            },
+            scales: {
+                x: { grid: { display: false } },
+                y: { beginAtZero: true, ticks: { stepSize: 2 } }
+            }
+        }
+    });
+</script>
+
+<style>
+.hover-shadow:hover { box-shadow: 0 8px 20px rgba(0,0,0,0.15); }
+.transition { transition: all 0.3s ease; }
+</style>
 @endsection
