@@ -42,6 +42,24 @@ Route::prefix('admin')->name('admin.')->middleware('role:admin')->group(function
 
 Route::prefix('doctor')->name('doctor.')->middleware('role:doctor')->group(function () {
     Route::get('dashboard', [DoctorDashboardController::class, 'index'])->name('dashboard');
+
+
+    Route::prefix('schedules')->name('schedules.')->group(function () {
+        Route::get('/', [App\Http\Controllers\Doctor\ScheduleController::class, 'index'])->name('index');
+        Route::get('/create', [App\Http\Controllers\Doctor\ScheduleController::class, 'create'])->name('create');
+        Route::post('/store', [App\Http\Controllers\Doctor\ScheduleController::class, 'store'])->name('store');
+        Route::get('/{schedule}/edit', [App\Http\Controllers\Doctor\ScheduleController::class, 'edit'])->name('edit');
+        Route::patch('/{schedule}', [App\Http\Controllers\Doctor\ScheduleController::class, 'update'])->name('update');
+    });
+
+    // Appointments
+    Route::prefix('appointments')->name('appointments.')->group(function () {
+        Route::get('/', [App\Http\Controllers\Doctor\AppointmentController::class, 'index'])->name('index');
+        Route::get('/queue', [App\Http\Controllers\Doctor\AppointmentController::class, 'queue'])->name('queue');
+        Route::get('/{appointment}', [App\Http\Controllers\Doctor\AppointmentController::class, 'show'])->name('show');
+        Route::patch('/{appointment}/status', [App\Http\Controllers\Doctor\AppointmentController::class, 'updateStatus'])->name('updateStatus');
+    });
+
 });
 
 Route::prefix('staff')->name('staff.')->middleware('role:staff')->group(function () {
