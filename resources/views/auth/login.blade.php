@@ -1,61 +1,103 @@
-<!DOCTYPE html>
-<html lang="en">
+@extends('layouts.app')
+@section('content')
+    <div class="bg-blue-pale min-h-screen flex items-center justify-center p-4">
+        <div class="w-full max-w-md">
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login</title>
-</head>
+            <div class="text-center mb-8">
+                <div class="inline-flex items-center justify-center w-16 h-16 bg-blue-main rounded-xl mb-4 shadow-lg">
+                    <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4">
+                        </path>
+                    </svg>
+                </div>
+                <h1 class="text-3xl font-bold text-blue-dark mb-2">Sistem Manajemen</h1>
+                <p class="text-blue-main font-medium">Rumah Sakit UNILA </p>
+            </div>
 
-<body>
-    <h2>Login</h2>
+            <div class="bg-white rounded-2xl shadow-xl p-8 border border-blue-100">
 
-    {{-- Pesan sukses atau gagal --}}
-    @if (session('success'))
-        <p style="color: green;">{{ session('success') }}</p>
-    @endif
+                @if (session('success'))
+                    <div class="mb-6 p-4 bg-green-50 border border-green-200 rounded-lg">
+                        <p class="text-green-700 font-medium text-sm">{{ session('success') }}</p>
+                    </div>
+                @endif
 
-    @if (session('error'))
-        <p style="color: red;">{{ session('error') }}</p>
-    @endif
+                @if (session('error'))
+                    <div class="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg">
+                        <p class="text-red-700 font-medium text-sm">{{ session('error') }}</p>
+                    </div>
+                @endif
 
-    {{-- Pesan error validasi --}}
-    @if ($errors->any())
-        <div style="color: red;">
-            <ul>
-                @foreach ($errors->all() as $error)
-                    <li>{{ $error }}</li>
-                @endforeach
-            </ul>
+                @if ($errors->any())
+                    <div class="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg">
+                        <ul class="space-y-2">
+                            @foreach ($errors->all() as $error)
+                                <li class="text-red-700 text-sm font-medium">• {{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                @endif
+
+                <!-- Login Form -->
+                <form action="{{ route('auth.login.process') }}" method="POST" class="space-y-5">
+                    @csrf
+
+                    <!-- Email Input -->
+                    <div>
+                        <label for="email" class="block text-sm font-semibold text-blue-dark mb-2">
+                            Email
+                        </label>
+                        <input type="email" id="email" name="email" value="{{ old('email') }}" required autofocus
+                            placeholder="admin@rumahsakit.com"
+                            class="input-focus w-full px-4 py-2.5 border-2 border-blue-200 rounded-lg focus:outline-none transition-colors">
+                    </div>
+
+                    <!-- Password Input -->
+                    <div>
+                        <label for="password" class="block text-sm font-semibold text-blue-dark mb-2">
+                            Password
+                        </label>
+                        <input type="password" id="password" name="password" required placeholder="••••••••"
+                            class="input-focus w-full px-4 py-2.5 border-2 border-blue-200 rounded-lg focus:outline-none transition-colors">
+                    </div>
+
+                    <!-- Remember Me -->
+                    <div class="flex items-center">
+                        <input type="checkbox" id="remember" name="remember"
+                            class="w-4 h-4 accent-blue-main cursor-pointer rounded">
+                        <label for="remember" class="ml-2 text-sm text-blue-dark font-medium cursor-pointer">
+                            Ingat saya
+                        </label>
+                    </div>
+
+                    <!-- Submit Button -->
+                    <button type="submit"
+                        class=" bg-blue-main text-white px-4 py-2 w-full mt-7 rounded hover:bg-blue-dark  transition-colors">
+                        Masuk Sistem
+                    </button>
+
+                </form>
+
+                <div class="mt-6 text-center">
+                    <a href="{{ route('auth.password.request') }}"
+                        class="text-blue-main hover:text-blue-light font-medium text-sm transition-colors">
+                        Lupa Password?
+                    </a>
+                </div>
+            </div>
+
+            <div class="mt-8 text-center">
+                <p class="text-blue-main text-sm">
+                    Sistem Keamanan Terintegrasi Rumah Sakit
+                </p>
+                <p class="text-blue-300 text-xs mt-2">
+                    © 2025 Semua hak dilindungi
+                </p>
+            </div>
         </div>
-    @endif
+    </div>
 
-    {{-- Form login --}}
-    <form action="{{ route('auth.login.process') }}" method="POST">
-        @csrf
+    </html>
 
-        <div style="margin-bottom: 10px;">
-            <label for="email">Email:</label><br>
-            <input type="email" id="email" name="email" value="{{ old('email') }}" required autofocus>
-        </div>
-
-        <div style="margin-bottom: 10px;">
-            <label for="password">Password:</label><br>
-            <input type="password" id="password" name="password" required>
-        </div>
-
-        <div style="margin-bottom: 10px;">
-            <label>
-                <input type="checkbox" name="remember"> Ingat saya
-            </label>
-        </div>
-
-        <button type="submit">Login</button>
-    </form>
-
-    <p style="margin-top: 10px;">
-        <a href="{{ route('auth.password.request') }}">Lupa Password?</a>
-    </p>
-</body>
-
-</html>
+@endsection
