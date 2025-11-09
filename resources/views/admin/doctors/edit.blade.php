@@ -1,94 +1,115 @@
 @extends('layouts.app')
 
-@section('content')
-    <div class="container">
-        <h3>Edit Dokter</h3>
+@section('title', 'Edit Dokter')
 
-        <form action="{{ route('admin.doctors.update', $doctor->id) }}" method="POST">
+@section('content')
+<div class="max-w-5xl mx-auto mt-8">
+
+    <div class="bg-white shadow-lg rounded-lg p-8 border border-gray-200">
+        <h2 class="text-3xl font-bold text-blue-900 mb-6">Edit Dokter</h2>
+
+        <form action="{{ route('admin.doctors.update', $doctor->id) }}" method="POST" class="space-y-6">
             @csrf
             @method('PUT')
 
-            <div class="mb-3">
-                <label>User (akun dokter)</label>
-                <select name="user_id" class="form-control" required>
-                    @foreach ($users as $u)
-                        <option value="{{ $u->id }}"
-                            {{ old('user_id', $doctor->user_id) == $u->id ? 'selected' : '' }}>
-                            {{ $u->name }} ({{ $u->email }})
-                        </option>
-                    @endforeach
-                </select>
-                @error('user_id')
-                    <div class="text-danger">{{ $message }}</div>
-                @enderror
+            {{-- Section: Akun --}}
+            <div class="bg-gray-50 p-4 rounded-lg border border-gray-200">
+                <h3 class="text-xl font-semibold text-gray-700 mb-4">Akun Dokter</h3>
+
+                <div class="mb-4">
+                    <label class="block text-gray-600 font-medium mb-1">User (akun dokter)</label>
+                    <select name="user_id" class="w-full border border-gray-300 rounded p-2 focus:ring-2 focus:ring-blue-300" required>
+                        @foreach ($users as $u)
+                            <option value="{{ $u->id }}" {{ old('user_id', $doctor->user_id) == $u->id ? 'selected' : '' }}>
+                                {{ $u->name }} ({{ $u->email }})
+                            </option>
+                        @endforeach
+                    </select>
+                    @error('user_id')
+                        <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                    @enderror
+                </div>
             </div>
 
-            <div class="mb-3">
-                <label>Spesialisasi</label>
-                <select name="specialization_id" class="form-control" required>
-                    @foreach ($specializations as $s)
-                        <option value="{{ $s->id }}"
-                            {{ old('specialization_id', $doctor->specialization_id) == $s->id ? 'selected' : '' }}>
-                            {{ $s->name }}
-                        </option>
-                    @endforeach
-                </select>
-                @error('specialization_id')
-                    <div class="text-danger">{{ $message }}</div>
-                @enderror
+            {{-- Section: Spesialisasi & Lisensi --}}
+            <div class="bg-gray-50 p-4 rounded-lg border border-gray-200">
+                <h3 class="text-xl font-semibold text-gray-700 mb-4">Spesialisasi & Lisensi</h3>
+
+                <div class="mb-4">
+                    <label class="block text-gray-600 font-medium mb-1">Spesialisasi</label>
+                    <select name="specialization_id" class="w-full border border-gray-300 rounded p-2 focus:ring-2 focus:ring-blue-300" required>
+                        @foreach ($specializations as $s)
+                            <option value="{{ $s->id }}" {{ old('specialization_id', $doctor->specialization_id) == $s->id ? 'selected' : '' }}>
+                                {{ $s->name }}
+                            </option>
+                        @endforeach
+                    </select>
+                    @error('specialization_id')
+                        <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                    @enderror
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div>
+                        <label class="block text-gray-600 font-medium mb-1">License Number</label>
+                        <input type="text" name="license_number" value="{{ old('license_number', $doctor->license_number) }}" class="w-full border border-gray-300 rounded p-2 focus:ring-2 focus:ring-blue-300" required>
+                        @error('license_number')
+                            <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                        @enderror
+                    </div>
+                    <div>
+                        <label class="block text-gray-600 font-medium mb-1">STR Number</label>
+                        <input type="text" name="str_number" value="{{ old('str_number', $doctor->str_number) }}" class="w-full border border-gray-300 rounded p-2 focus:ring-2 focus:ring-blue-300" required>
+                        @error('str_number')
+                            <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                        @enderror
+                    </div>
+                    <div>
+                        <label class="block text-gray-600 font-medium mb-1">STR Expiry Date</label>
+                        <input type="date" name="str_expiry_date" value="{{ old('str_expiry_date', $doctor->str_expiry_date->format('Y-m-d')) }}" class="w-full border border-gray-300 rounded p-2 focus:ring-2 focus:ring-blue-300" required>
+                        @error('str_expiry_date')
+                            <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                        @enderror
+                    </div>
+                </div>
             </div>
 
-            <div class="mb-3">
-                <label>License Number</label>
-                <input type="text" name="license_number" class="form-control"
-                    value="{{ old('license_number', $doctor->license_number) }}" required>
-                @error('license_number')
-                    <div class="text-danger">{{ $message }}</div>
-                @enderror
+            {{-- Section: Pendidikan & Pengalaman --}}
+            <div class="bg-gray-50 p-4 rounded-lg border border-gray-200">
+                <h3 class="text-xl font-semibold text-gray-700 mb-4">Pendidikan & Pengalaman</h3>
+
+                <div class="mb-4">
+                    <label class="block text-gray-600 font-medium mb-1">Education</label>
+                    <textarea name="education" class="w-full border border-gray-300 rounded p-2 focus:ring-2 focus:ring-blue-300">{{ old('education', $doctor->education) }}</textarea>
+                </div>
+
+                <div class="mb-4">
+                    <label class="block text-gray-600 font-medium mb-1">Experience Years</label>
+                    <input type="number" name="experience_years" value="{{ old('experience_years', $doctor->experience_years) }}" min="0" class="w-full border border-gray-300 rounded p-2 focus:ring-2 focus:ring-blue-300">
+                </div>
+
+                <div class="mb-4">
+                    <label class="block text-gray-600 font-medium mb-1">Consultation Fee</label>
+                    <input type="number" step="0.01" name="consultation_fee" value="{{ old('consultation_fee', $doctor->consultation_fee) }}" class="w-full border border-gray-300 rounded p-2 focus:ring-2 focus:ring-blue-300">
+                </div>
             </div>
 
-            <div class="mb-3">
-                <label>STR Number</label>
-                <input type="text" name="str_number" class="form-control"
-                    value="{{ old('str_number', $doctor->str_number) }}" required>
-                @error('str_number')
-                    <div class="text-danger">{{ $message }}</div>
-                @enderror
+            {{-- Section: Bio --}}
+            <div class="bg-gray-50 p-4 rounded-lg border border-gray-200">
+                <h3 class="text-xl font-semibold text-gray-700 mb-4">Bio</h3>
+                <textarea name="bio" class="w-full border border-gray-300 rounded p-2 focus:ring-2 focus:ring-blue-300">{{ old('bio', $doctor->bio) }}</textarea>
             </div>
 
-            <div class="mb-3">
-                <label>STR Expiry Date</label>
-                <input type="date" name="str_expiry_date" class="form-control"
-                    value="{{ old('str_expiry_date', $doctor->str_expiry_date->format('Y-m-d')) }}" required>
-                @error('str_expiry_date')
-                    <div class="text-danger">{{ $message }}</div>
-                @enderror
+            {{-- Buttons --}}
+            <div class="flex space-x-4 mt-6">
+                <button type="submit" class="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-500 transition shadow">
+                    Perbarui
+                </button>
+                <a href="{{ route('admin.doctors.index') }}" class="bg-gray-300 text-gray-700 px-6 py-2 rounded-lg hover:bg-gray-400 transition shadow">
+                    Batal
+                </a>
             </div>
-
-            <div class="mb-3">
-                <label>Education</label>
-                <textarea name="education" class="form-control">{{ old('education', $doctor->education) }}</textarea>
-            </div>
-
-            <div class="mb-3">
-                <label>Experience Years</label>
-                <input type="number" name="experience_years" class="form-control"
-                    value="{{ old('experience_years', $doctor->experience_years) }}" min="0">
-            </div>
-
-            <div class="mb-3">
-                <label>Consultation Fee</label>
-                <input type="number" step="0.01" name="consultation_fee" class="form-control"
-                    value="{{ old('consultation_fee', $doctor->consultation_fee) }}">
-            </div>
-
-            <div class="mb-3">
-                <label>Bio</label>
-                <textarea name="bio" class="form-control">{{ old('bio', $doctor->bio) }}</textarea>
-            </div>
-
-            <button class="btn btn-primary">Perbarui</button>
-            <a href="{{ route('admin.doctors.index') }}" class="btn btn-secondary">Batal</a>
         </form>
     </div>
+</div>
 @endsection

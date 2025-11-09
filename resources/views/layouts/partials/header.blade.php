@@ -34,7 +34,7 @@
                 <li><a href="{{ route('admin.users.index') }}" class="hover:text-blue-pale">Kelola User</a></li>
                 <li><a href="{{ route('admin.doctors.index') }}" class="hover:text-blue-pale">Kelola Dokter</a></li>
                 <li><a href="{{ route('admin.specializations.index') }}" class="hover:text-blue-pale">Kelola Spesialisasi</a></li>
-                <li><a href="#" class="hover:text-blue-pale">Kelola Staff</a></li>
+                <li><a href="{{ route('admin.staff.index') }}" class="hover:text-blue-pale">Kelola Staff</a></li>
             @endif
 
             {{-- DOCTOR --}}
@@ -76,7 +76,7 @@
                 <li><a href="{{ route('admin.users.index') }}" class="block py-2">Kelola User</a></li>
                 <li><a href="{{ route('admin.doctors.index') }}" class="block py-2">Kelola Dokter</a></li>
                 <li><a href="{{ route('admin.specializations.index') }}" class="block py-2">Kelola Spesialisasi</a></li>
-                <li><a href="#" class="block py-2">Kelola Staff</a></li>
+                <li><a href="{{ route('admin.staff.index') }}" class="block py-2">Kelola Staff</a></li>
             @endif
 
             {{-- DOCTOR --}}

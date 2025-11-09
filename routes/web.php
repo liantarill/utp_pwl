@@ -41,6 +41,7 @@ Route::prefix('admin')->name('admin.')->middleware('role:admin')->group(function
     Route::resource('users', App\Http\Controllers\Admin\UserController::class);
     Route::resource('doctors', App\Http\Controllers\Admin\DoctorController::class);
     Route::resource('specializations', App\Http\Controllers\Admin\SpecializationController::class);
+    Route::resource('staff', App\Http\Controllers\Admin\StaffController::class);
 });
 
 
