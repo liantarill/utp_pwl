@@ -37,6 +37,11 @@ Route::prefix('auth')->name('auth.')->group(function () {
 
 Route::prefix('admin')->name('admin.')->middleware('role:admin')->group(function () {
     Route::get('dashboard', [AdminDashboardController::class, 'index'])->name('dashboard');
+
+    Route::resource('users', App\Http\Controllers\Admin\UserController::class);
+    Route::resource('doctors', App\Http\Controllers\Admin\DoctorController::class);
+    Route::resource('specializations', App\Http\Controllers\Admin\SpecializationController::class);
+    Route::resource('staff', App\Http\Controllers\Admin\StaffController::class);
 });
 
 
@@ -59,7 +64,6 @@ Route::prefix('doctor')->name('doctor.')->middleware('role:doctor')->group(funct
         Route::get('/{appointment}', [App\Http\Controllers\Doctor\AppointmentController::class, 'show'])->name('show');
         Route::patch('/{appointment}/status', [App\Http\Controllers\Doctor\AppointmentController::class, 'updateStatus'])->name('updateStatus');
     });
-
 });
 
 Route::prefix('staff')->name('staff.')->middleware('role:staff')->group(function () {

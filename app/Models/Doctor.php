@@ -52,6 +52,7 @@ class Doctor extends Model
     {
         return $this->belongsTo(Specialization::class);
     }
+<<<<<<< HEAD
 
 
     // ditambahin pas schedules
@@ -59,4 +60,6 @@ class Doctor extends Model
     {
         return $this->hasMany(Schedule::class);
     }
+=======
+>>>>>>> origin/admin
 }
