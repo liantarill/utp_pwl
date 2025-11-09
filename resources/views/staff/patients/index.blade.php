@@ -1,44 +1,65 @@
 @extends('layouts.app')
 
+@section('title', 'Data Pasien')
+
 @section('content')
-    <div class="container">
-        <h1>Patients</h1>
-        <a href="{{ route('staff.patients.create') }}" class="btn btn-success mb-2">Add Patient</a>
+<div class="p-8 bg-blue-pale min-h-screen">
+    <div class="max-w-6xl mx-auto">
+        <div class="flex items-center justify-between mb-8">
+            <h1 class="text-3xl font-bold text-blue-dark tracking-tight">Data Pasien</h1>
+            <a href="{{ route('staff.patients.create') }}"
+                class="flex items-center bg-blue-main hover:bg-blue-dark text-white px-5 py-2.5 rounded-xl shadow-lg transition">
+                <i class="fas fa-user-plus mr-2"></i> Tambah Pasien
+            </a>
+        </div>
 
-        @if (session('success'))
-            <div class="alert alert-success">{{ session('success') }}</div>
-        @endif
-
-        <table class="table table-bordered">
-            <thead>
-                <tr>
-                    <th>MRN</th>
-                    <th>Name</th>
-                    <th>Phone</th>
-                    <th>Email</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach ($patients as $patient)
+        <div class="bg-white rounded-2xl shadow-xl overflow-hidden">
+            <table class="w-full text-gray-700">
+                <thead class="bg-blue-main text-white">
                     <tr>
-                        <td>{{ $patient->medical_record_number }}</td>
-                        <td>{{ $patient->name }}</td>
-                        <td>{{ $patient->phone }}</td>
-                        <td>{{ $patient->email }}</td>
-                        <td>
-                            <a href="{{ route('staff.patients.show', $patient) }}" class="btn btn-info btn-sm">View</a>
-                            <a href="{{ route('staff.patients.edit', $patient) }}" class="btn btn-warning btn-sm">Edit</a>
-                            <form action="{{ route('staff.patients.destroy', $patient) }}" method="POST"
-                                style="display:inline-block">
-                                @csrf @method('DELETE')
-                                <button class="btn btn-danger btn-sm"
-                                    onclick="return confirm('Delete patient?')">Delete</button>
-                            </form>
+                        <th class="py-3 px-4 text-left">#</th>
+                        <th class="py-3 px-4 text-left">Nama</th>
+                        <th class="py-3 px-4 text-left">Email</th>
+                        <th class="py-3 px-4 text-left">Telepon</th>
+                        <th class="py-3 px-4 text-center">Aksi</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @forelse($patients as $patient)
+                    <tr class="border-b hover:bg-blue-pale transition">
+                        <td class="py-3 px-4">{{ $loop->iteration }}</td>
+                        <td class="py-3 px-4 font-semibold text-blue-dark">{{ $patient->name }}</td>
+                        <td class="py-3 px-4">{{ $patient->email ?? '-' }}</td>
+                        <td class="py-3 px-4">{{ $patient->phone ?? '-' }}</td>
+                        <td class="py-3 px-4 text-center">
+                            <div class="flex justify-center gap-3">
+                                <a href="{{ route('staff.patients.show', $patient->id) }}"
+                                    class="text-blue-main hover:text-blue-dark" title="Lihat Detail">
+                                    <i class="fas fa-eye"></i>
+                                </a>
+                                <a href="{{ route('staff.patients.edit', $patient->id) }}"
+                                    class="text-green-600 hover:text-green-800" title="Edit">
+                                    <i class="fas fa-edit"></i>
+                                </a>
+                                <form action="{{ route('staff.patients.destroy', $patient->id) }}" method="POST"
+                                    onsubmit="return confirm('Yakin ingin menghapus pasien ini?')" class="inline">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="text-red-600 hover:text-red-800" title="Hapus">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </form>
+                            </div>
                         </td>
                     </tr>
-                @endforeach
-            </tbody>
-        </table>
+                    @empty
+                    <tr>
+                        <td colspan="5" class="text-center text-gray-500 py-6">Belum ada data pasien.</td>
+                    </tr>
+                    @endforelse
+                </tbody>
+            </table>
+        </div>
     </div>
+</div>
 @endsection
