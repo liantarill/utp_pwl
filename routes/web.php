@@ -5,6 +5,7 @@ use App\Http\Controllers\Doctor\DashboardController as DoctorDashboardController
 use App\Http\Controllers\Staff\DashboardController as StaffDashboardController;
 
 use App\Http\Controllers\Auth\LoginController;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -22,6 +23,21 @@ use Illuminate\Support\Facades\Route;
 //     return view('welcome');
 // });
 
+Route::get('/', function () {
+    // jika sudah login arahkan sesuai role
+    if (Auth::check()) {
+        $user = Auth::user();
+
+        if ($user->role === 'customer') {
+            return redirect()->route('customer.dashboard');
+        } elseif ($user->role === 'admin') {
+            return redirect()->route('admin.dashboard');
+        }
+    }
+
+    // jika belum login tampilkan form login (atau view welcome jika kamu mau)
+    return view('auth.login');
+})->name('root');
 
 Route::prefix('auth')->name('auth.')->group(function () {
     Route::get('login', [LoginController::class, 'index'])->name('login');
@@ -41,6 +57,9 @@ Route::prefix('admin')->name('admin.')->middleware('role:admin')->group(function
     Route::resource('users', App\Http\Controllers\Admin\UserController::class);
     Route::resource('doctors', App\Http\Controllers\Admin\DoctorController::class);
     Route::resource('specializations', App\Http\Controllers\Admin\SpecializationController::class);
+
+    Route::post('specializations/{id}/restore', [App\Http\Controllers\Admin\SpecializationController::class, 'restore'])->name('specializations.restore');
+    Route::delete('specializations/{id}/force-delete', [App\Http\Controllers\Admin\SpecializationController::class, 'forceDelete'])->name('specializations.force-delete');
     Route::resource('staff', App\Http\Controllers\Admin\StaffController::class);
 });
 

@@ -11,8 +11,16 @@ class AppointmentController extends Controller
 {
     public function index()
     {
-        $appointments = Appointment::where('doctor_id', Auth::id())
-            ->whereDate('appointment_date', today())
+        $user = Auth::user();
+        $doctor = $user->doctor;
+
+        if (! $doctor) {
+            return redirect()->route('home')->with('error', 'Doctor profile not found.');
+        }
+
+        $appointments = Appointment::where('doctor_id', $doctor->id)
+            ->with(['patient', 'schedule', 'doctor.user'])
+            ->orderBy('appointment_date', 'desc')
             ->orderBy('queue_number')
             ->get();
 
@@ -38,6 +46,7 @@ class AppointmentController extends Controller
     {
         $appointment->update(['status' => $request->status]);
 
-        return back()->with('success', 'Appointment status updated');
+        return redirect()->route('doctor.appointments.index')
+            ->with('success', 'Appointment status updated');
     }
 }

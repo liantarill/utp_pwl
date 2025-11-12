@@ -6,23 +6,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@yield('title', 'Sistem Manajemen Rumah Sakit')</title>
 
-<<<<<<< HEAD
     {{-- Tambahkan ini agar CSRF token dikirim ke semua form --}}
     <meta name="csrf-token" content="{{ csrf_token() }}">
-
-=======
-    <!-- Google Font -->
->>>>>>> origin/admin
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link
-        href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
         rel="stylesheet">
 
-<<<<<<< HEAD
-=======
-    <!-- TailwindCSS -->
->>>>>>> origin/admin
+
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -49,15 +41,21 @@
 
 <body class="bg-gray-50 min-h-screen flex flex-col">
     {{-- HEADER --}}
-    @include('layouts.partials.header')
+
+    @auth
+        @include('layouts.partials.header')
+    @endauth
+
 
     {{-- MAIN CONTENT --}}
     <main class="flex-grow">
         @yield('content')
     </main>
 
-    {{-- FOOTER --}}
-    @include('layouts.partials.footer')
+    @auth
+        @include('layouts.partials.footer')
+    @endauth
 
 </body>
+
 </html>

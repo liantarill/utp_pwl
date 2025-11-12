@@ -16,7 +16,7 @@ class AppointmentController extends Controller
      */
     public function index()
     {
-        $appointments = Appointment::with(['patient', 'doctor', 'schedule'])
+        $appointments = Appointment::with(['patient', 'doctor.user', 'schedule'])
             ->orderBy('appointment_date', 'desc')
             ->get();
 

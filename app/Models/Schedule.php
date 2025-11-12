@@ -4,26 +4,31 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Str;
 
 class Schedule extends Model
 {
     use SoftDeletes;
 
+    public $incrementing = false;
+    protected $keyType = 'string';
+
     protected $fillable = [
+        'id',
         'doctor_id',
-        'day_of_week',
+        'day',
         'start_time',
         'end_time',
         'quota',
-        'is_active',
+        'is_active'
     ];
 
-    protected $casts = [
-        'is_active' => 'boolean',
-    ];
-
-    public function doctor()
+    protected static function booted()
     {
-        return $this->belongsTo(\App\Models\Doctor::class);
+        static::creating(function ($model) {
+            if (empty($model->{$model->getKeyName()})) {
+                $model->{$model->getKeyName()} = (string) Str::uuid();
+            }
+        });
     }
 }

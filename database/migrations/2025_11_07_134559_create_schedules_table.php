@@ -20,6 +20,10 @@ return new class extends Migration
             $table->string('day'); // contoh: Monday, Tuesday, dst
             $table->time('start_time');
             $table->time('end_time');
+
+            // kuota pasien per jadwal
+            $table->integer('quota')->default(1);
+
             $table->boolean('is_active')->default(true);
 
             $table->timestamps();

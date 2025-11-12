@@ -61,13 +61,10 @@ class User extends Authenticatable
             }
         });
     }
-<<<<<<< HEAD
 
 
     public function doctor()
     {
         return $this->hasOne(\App\Models\Doctor::class, 'user_id');
     }
-=======
->>>>>>> origin/admin
 }

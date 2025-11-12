@@ -2,16 +2,18 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Support\Str;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Doctor extends Model
 {
-    use HasFactory;
-
     use HasFactory, SoftDeletes;
+
+    protected $table = 'doctors';
+    public $incrementing = false;         // penting untuk UUID pk
+    protected $keyType = 'string';        // id adalah string UUID
+    protected $primaryKey = 'id';
 
     protected $fillable = [
         'id',
@@ -24,25 +26,13 @@ class Doctor extends Model
         'experience_years',
         'consultation_fee',
         'bio',
-        'photo',
+        'photo'
     ];
     protected $casts = [
-        'str_expiry_date' => 'datetime',
+        'str_expiry_date' => 'date',
     ];
-    public $incrementing = false;
-    protected $keyType = 'string';
 
-    protected static function boot()
-    {
-        parent::boot();
-
-        static::creating(function ($model) {
-            if (! $model->id) {
-                $model->id = Str::uuid();
-            }
-        });
-    }
-
+    // Relasi ke user (pastikan User model ada)
     public function user()
     {
         return $this->belongsTo(User::class);
@@ -50,16 +40,11 @@ class Doctor extends Model
 
     public function specialization()
     {
-        return $this->belongsTo(Specialization::class);
+        return $this->belongsTo(Specialization::class, 'specialization_id');
     }
-<<<<<<< HEAD
-
-
-    // ditambahin pas schedules
+    // Relasi ke jadwal
     public function schedules()
     {
         return $this->hasMany(Schedule::class);
     }
-=======
->>>>>>> origin/admin
 }

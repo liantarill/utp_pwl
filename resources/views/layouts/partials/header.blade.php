@@ -20,8 +20,7 @@
         <button onclick="document.getElementById('mobileMenu').classList.toggle('hidden')"
             class="lg:hidden focus:outline-none">
             <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                    d="M4 8h16M4 16h16"/>
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8h16M4 16h16" />
             </svg>
         </button>
 
@@ -33,30 +32,32 @@
                 <li><a href="{{ route('admin.dashboard') }}" class="hover:text-blue-pale">Dashboard</a></li>
                 <li><a href="{{ route('admin.users.index') }}" class="hover:text-blue-pale">Kelola User</a></li>
                 <li><a href="{{ route('admin.doctors.index') }}" class="hover:text-blue-pale">Kelola Dokter</a></li>
-                <li><a href="{{ route('admin.specializations.index') }}" class="hover:text-blue-pale">Kelola Spesialisasi</a></li>
+                <li><a href="{{ route('admin.specializations.index') }}" class="hover:text-blue-pale">Kelola
+                        Spesialisasi</a></li>
                 <li><a href="{{ route('admin.staff.index') }}" class="hover:text-blue-pale">Kelola Staff</a></li>
             @endif
 
             {{-- DOCTOR --}}
             @if (Auth::check() && Auth::user()->role === 'doctor')
                 <li><a href="{{ route('doctor.dashboard') }}" class="hover:text-blue-pale">Dashboard</a></li>
-                <li><a href="#" class="hover:text-blue-pale">Daftar Pasien</a></li>
-                <li><a href="#" class="hover:text-blue-pale">Jadwal Praktek</a></li>
+                <li><a href="{{ route('doctor.appointments.index') }}" class="hover:text-blue-pale">Daftar Pasien</a>
+                </li>
+                <li><a href="{{ route('doctor.schedules.index') }}" class="hover:text-blue-pale">Jadwal Praktek</a></li>
             @endif
 
             {{-- STAFF --}}
             @if (Auth::check() && Auth::user()->role === 'staff')
                 <li><a href="{{ route('staff.dashboard') }}" class="hover:text-blue-pale">Dashboard</a></li>
-                <li><a href="#" class="hover:text-blue-pale">Pendaftaran Pasien</a></li>
-                <li><a href="#" class="hover:text-blue-pale">Laporan</a></li>
+                <li><a href="{{ route('staff.patients.index') }}" class="hover:text-blue-pale">Pasien</a>
+                </li>
+                <li><a href="{{ route('staff.appointments.index') }}" class="hover:text-blue-pale">Janji Temu</a></li>
             @endif
 
             {{-- LOGOUT --}}
             <li>
                 <form action="{{ route('auth.logout') }}" method="POST">
                     @csrf
-                    <button type="submit"
-                        class="px-4 py-1.5 bg-red-600 rounded-lg hover:bg-red-700 transition shadow">
+                    <button type="submit" class="px-4 py-1.5 bg-red-600 rounded-lg hover:bg-red-700 transition shadow">
                         Logout
                     </button>
                 </form>
@@ -75,7 +76,8 @@
                 <li><a href="{{ route('admin.dashboard') }}" class="block py-2">Dashboard</a></li>
                 <li><a href="{{ route('admin.users.index') }}" class="block py-2">Kelola User</a></li>
                 <li><a href="{{ route('admin.doctors.index') }}" class="block py-2">Kelola Dokter</a></li>
-                <li><a href="{{ route('admin.specializations.index') }}" class="block py-2">Kelola Spesialisasi</a></li>
+                <li><a href="{{ route('admin.specializations.index') }}" class="block py-2">Kelola Spesialisasi</a>
+                </li>
                 <li><a href="{{ route('admin.staff.index') }}" class="block py-2">Kelola Staff</a></li>
             @endif
 
