@@ -39,6 +39,9 @@ class ScheduleController extends Controller
     {
         $request->merge(['day' => $request->input('day') ?? $request->input('day_of_week')]);
 
+        if ($request->quota < 1) {
+            return back()->with('error', 'kuota tidak bisa kurang dari 1');
+        }
         $request->validate([
             'day' => 'required|string',
             'start_time' => 'required|date_format:H:i',
@@ -46,6 +49,8 @@ class ScheduleController extends Controller
             'quota' => 'required|integer|min:1',
             'is_active' => 'sometimes|boolean',
         ]);
+
+
 
         $doctorId = \App\Models\Doctor::where('user_id', Auth::id())->value('id');
         if (!$doctorId) {
